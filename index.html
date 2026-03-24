@@ -22,6 +22,10 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Nunito', sans-serif;
             background: var(--bg);
@@ -30,9 +34,9 @@
                 radial-gradient(circle at 90% 75%, #fce7f3 0%, transparent 35%),
                 radial-gradient(circle at 75% 5%,  #dbeafe 0%, transparent 30%);
             min-height: 100vh;
+            /* ✅ CORRIGIDO: removido overflow:hidden e flex col — agora o body rola normalmente */
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
 
         /* ── HEADER ── */
@@ -44,6 +48,10 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 4px 16px rgba(21,128,61,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-shrink: 0;
         }
 
         header h1 {
@@ -68,14 +76,14 @@
             white-space: nowrap;
         }
 
-        /* ── LAYOUT ── */
+        /* ── MAIN ── */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding: 12px 20px 8px;
-            min-height: 0;
+            gap: 12px;
+            padding: 14px 20px;
+            /* ✅ CORRIGIDO: sem overflow:hidden, sem height restritiva — cresce com o conteúdo */
         }
 
         /* ── INSTRUÇÃO ── */
@@ -88,6 +96,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
+            flex-shrink: 0;
         }
 
         .instrucao-label {
@@ -110,16 +119,23 @@
             letter-spacing: 0.5px;
         }
 
-        .instrucao-texto span {
-            color: var(--verde-dark);
-        }
+        .instrucao-texto span { color: var(--verde-dark); }
 
         /* ── ÁREA PRINCIPAL ── */
         .area-principal {
-            flex: 1;
             display: flex;
             gap: 14px;
-            min-height: 0;
+            align-items: flex-start; /* ✅ CORRIGIDO: flex-start para os painéis crescerem independentemente */
+        }
+
+        /* Responsivo: em telas pequenas empilha */
+        @media (max-width: 700px) {
+            .area-principal {
+                flex-direction: column;
+            }
+            .zona-wrap {
+                width: 100% !important;
+            }
         }
 
         /* ── GRADE DE VEÍCULOS ── */
@@ -133,6 +149,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            /* ✅ CORRIGIDO: sem height fixa nem overflow:hidden */
         }
 
         .grade-hint {
@@ -142,17 +159,17 @@
             text-align: center;
             text-transform: uppercase;
             opacity: 0.8;
+            flex-shrink: 0;
         }
 
         #grade {
-            flex: 1;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            align-content: center;
+            /* ✅ CORRIGIDO: sem flex:1 nem height restritiva */
         }
 
-        /* ── ITEM / VEÍCULO ── */
+        /* ── ITEM ── */
         .item {
             border-radius: 18px;
             border: 3px solid #E5E7EB;
@@ -184,6 +201,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            /* ✅ CORRIGIDO: sem overflow:hidden, sem height restritiva */
         }
 
         .zona-titulo {
@@ -192,13 +210,15 @@
             font-size: 0.95rem;
             text-align: center;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
 
         .zona {
             border-radius: 18px;
             border: 3px dashed #D1D5DB;
             background: #F9FAFB;
-            flex: 1;
+            /* ✅ CORRIGIDO: altura mínima fixa em vez de flex:1 — garante área visível e cresce com conteúdo */
+            min-height: 100px;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
@@ -207,15 +227,8 @@
             transition: background 0.2s, border-color 0.2s, transform 0.15s;
         }
 
-        .zona.sim {
-            border-color: #6EE7B7;
-            background: #ECFDF5;
-        }
-
-        .zona.nao {
-            border-color: #FCA5A5;
-            background: #FFF1F2;
-        }
+        .zona.sim { border-color: #6EE7B7; background: #ECFDF5; }
+        .zona.nao { border-color: #FCA5A5; background: #FFF1F2; }
 
         .zona.drag-over-sim {
             border-color: var(--verde);
@@ -223,7 +236,6 @@
             border-style: solid;
             transform: scale(1.02);
         }
-
         .zona.drag-over-nao {
             border-color: #EF4444;
             background: #FEE2E2;
@@ -238,16 +250,15 @@
             padding: 6px;
             border-radius: 12px;
             text-transform: uppercase;
+            flex-shrink: 0;
         }
-
         .zona-label.sim { background: #D1FAE5; color: var(--verde-dark); }
         .zona-label.nao { background: #FEE2E2; color: #DC2626; }
 
+        /* Itens dentro da zona ficam menores */
         .zona .item {
-            aspect-ratio: 1/1;
             width: calc(50% - 4px);
             font-size: 2.4rem;
-            cursor: grab;
         }
 
         .zona:empty::after {
@@ -260,20 +271,24 @@
             padding-top: 20px;
         }
 
-        /* ── BOTÃO ── */
+        /* ── BOTÃO CONFERIR ── */
         .btn-conferir {
             background: linear-gradient(135deg, var(--verde-dark), var(--verde-mid));
             color: white;
             border: none;
             border-radius: 14px;
-            padding: 11px;
+            padding: 13px;
             font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
+            font-size: 1.05rem;
             cursor: pointer;
             letter-spacing: 0.5px;
             box-shadow: 0 4px 0 #14532d;
             transition: transform 0.1s, box-shadow 0.1s;
             text-transform: uppercase;
+            width: 100%;
+            /* ✅ CORRIGIDO: flex-shrink:0 garante que o botão nunca suma */
+            flex-shrink: 0;
+            margin-top: auto; /* empurra para baixo do zona-wrap */
         }
         .btn-conferir:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #14532d; }
         .btn-conferir:active { transform: translateY(2px); box-shadow: 0 2px 0 #14532d; }
@@ -284,7 +299,10 @@
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.55);
             backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center; z-index: 300;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
         }
         #modal-overlay.show { display: flex; }
 
@@ -296,6 +314,9 @@
             box-shadow: 0 24px 60px rgba(0,0,0,0.25);
             animation: pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
             text-align: center;
+            /* ✅ scroll interno caso o modal seja grande em telas pequenas */
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         @keyframes pop {
@@ -334,11 +355,9 @@
             font-size: 0.82rem;
             font-weight: 800;
         }
-
-        .feedback-card.ok { background: #F0FDF4; color: #15803D; border: 2px solid #BBF7D0; }
-        .feedback-card.err { background: #FEF2F2; color: #DC2626; border: 2px solid #FECACA; }
+        .feedback-card.ok   { background: #F0FDF4; color: #15803D; border: 2px solid #BBF7D0; }
+        .feedback-card.err  { background: #FEF2F2; color: #DC2626; border: 2px solid #FECACA; }
         .feedback-card.miss { background: #FFFBEB; color: #B45309; border: 2px solid #FDE68A; }
-
         .feedback-card .fmoji { font-size: 1.8rem; display: block; margin-bottom: 3px; }
 
         .pontos-rodada {
@@ -375,7 +394,9 @@
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.55);
             backdrop-filter: blur(5px);
-            justify-content: center; align-items: center; z-index: 400;
+            justify-content: center;
+            align-items: center;
+            z-index: 400;
         }
         #tela-final.show { display: flex; }
 
@@ -434,12 +455,13 @@
             background: #e8f5e9;
             color: #6B7280;
             text-align: center;
-            padding: 5px;
+            padding: 8px;
             font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             border-top: 2px solid #bbf7d0;
+            flex-shrink: 0;
         }
 
         /* Scrollbar */
@@ -477,10 +499,13 @@
         <!-- ZONA DE CLASSIFICAÇÃO -->
         <div class="zona-wrap">
             <p class="zona-titulo">📦 Sua classificação</p>
+
             <div class="zona-label sim">✅ Sim, pertence!</div>
             <div class="zona sim" id="zona-sim" data-placeholder="Arraste aqui os que pertencem..."></div>
+
             <div class="zona-label nao">❌ Não pertence!</div>
             <div class="zona nao" id="zona-nao" data-placeholder="Arraste aqui os que não pertencem..."></div>
+
             <button class="btn-conferir" id="btn-conferir" onclick="conferir()">✅ Conferir</button>
         </div>
 
@@ -568,12 +593,12 @@
         document.getElementById('zona-sim').classList.remove('drag-over-sim','drag-over-nao');
         document.getElementById('zona-nao').classList.remove('drag-over-sim','drag-over-nao');
 
-        // Seleciona 8 veículos: pelo menos 2 corretos e 2 incorretos
+        // Seleciona veículos: pelo menos 2 corretos e 2 incorretos
         const corretos   = veiculos.filter(v =>  v.tags.includes(criterioAtual.tag));
         const incorretos = veiculos.filter(v => !v.tags.includes(criterioAtual.tag));
         shuffle(corretos); shuffle(incorretos);
 
-        const nCorr = Math.min(corretos.length, 2 + Math.floor(Math.random() * 3)); // 2-4 corretos
+        const nCorr = Math.min(corretos.length, 2 + Math.floor(Math.random() * 3));
         const nErr  = Math.min(incorretos.length, 8 - nCorr);
         const selecionados = [...corretos.slice(0, nCorr), ...incorretos.slice(0, nErr)];
         shuffle(selecionados);
@@ -583,6 +608,9 @@
         selecionados.forEach(v => grade.appendChild(criarItem(v)));
 
         configurarZonas();
+
+        // ✅ Rola de volta ao topo ao carregar nova fase
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function shuffle(arr) { arr.sort(() => Math.random() - 0.5); }
@@ -616,29 +644,37 @@
     function configurarZonas() {
         ['zona-sim','zona-nao','grade'].forEach(id => {
             const el = document.getElementById(id);
-            el.addEventListener('dragover', e => {
+            // Remove listeners antigos clonando o nó (evita acúmulo de listeners entre fases)
+            const clone = el.cloneNode(false);
+            // Preserva os filhos
+            while (el.firstChild) clone.appendChild(el.firstChild);
+            el.parentNode.replaceChild(clone, el);
+            const fresh = document.getElementById(id);
+
+            fresh.addEventListener('dragover', e => {
                 e.preventDefault();
                 limparDragOver();
-                if (id === 'zona-sim') el.classList.add('drag-over-sim');
-                if (id === 'zona-nao') el.classList.add('drag-over-nao');
+                if (id === 'zona-sim') fresh.classList.add('drag-over-sim');
+                if (id === 'zona-nao') fresh.classList.add('drag-over-nao');
             });
-            el.addEventListener('dragleave', limparDragOver);
-            el.addEventListener('drop', e => {
+            fresh.addEventListener('dragleave', e => {
+                // Só remove se realmente saiu do elemento (não de filho)
+                if (!fresh.contains(e.relatedTarget)) limparDragOver();
+            });
+            fresh.addEventListener('drop', e => {
                 e.preventDefault();
                 limparDragOver();
                 if (!draggingEl) return;
-                el.appendChild(draggingEl);
-                if (id !== 'grade') {
-                    draggingEl.style.width = '';
-                    draggingEl.style.fontSize = '';
-                }
+                fresh.appendChild(draggingEl);
             });
         });
     }
 
     function limparDragOver() {
-        document.getElementById('zona-sim').classList.remove('drag-over-sim','drag-over-nao');
-        document.getElementById('zona-nao').classList.remove('drag-over-sim','drag-over-nao');
+        const s = document.getElementById('zona-sim');
+        const n = document.getElementById('zona-nao');
+        if (s) s.classList.remove('drag-over-sim','drag-over-nao');
+        if (n) n.classList.remove('drag-over-sim','drag-over-nao');
     }
 
     // ── TOUCH DRAG ──
@@ -650,12 +686,15 @@
         const rect = el.getBoundingClientRect();
         touchOffsetX = touch.clientX - rect.left;
         touchOffsetY = touch.clientY - rect.top;
+
         ghostEl = el.cloneNode(true);
-        ghostEl.style.cssText = `position:fixed;z-index:999;pointer-events:none;
+        ghostEl.style.cssText = `
+            position:fixed;z-index:999;pointer-events:none;
             width:${rect.width}px;height:${rect.height}px;
             left:${rect.left}px;top:${rect.top}px;
             opacity:0.85;transform:scale(1.15);transition:none;`;
         document.body.appendChild(ghostEl);
+
         document.addEventListener('touchmove', onTouchMove, { passive: false });
         document.addEventListener('touchend', onTouchEnd);
         e.preventDefault();
@@ -697,13 +736,16 @@
         const zonaNao = document.getElementById('zona-nao');
         const grade   = document.getElementById('grade');
 
+        const itensSim = zonaSim.querySelectorAll('.item').length;
+        const itensNao = zonaNao.querySelectorAll('.item').length;
         const itensNaGrade = grade.querySelectorAll('.item').length;
-        if (zonaSim.querySelectorAll('.item').length === 0 && zonaNao.querySelectorAll('.item').length === 0) {
+
+        if (itensSim === 0 && itensNao === 0) {
             piscaErro();
             return;
         }
 
-        let acertos = 0, erros = 0, naoclassificados = itensNaGrade;
+        let acertos = 0, erros = 0;
         let feedbackSim = [], feedbackNao = [];
 
         zonaSim.querySelectorAll('.item').forEach(el => {
@@ -718,22 +760,16 @@
             else { erros++; feedbackNao.push({ e: el.textContent, ok: false }); }
         });
 
-        // Itens não classificados penalizam
-        const totalItens = zonaSim.querySelectorAll('.item').length +
-                           zonaNao.querySelectorAll('.item').length +
-                           naoclassificados;
-
-        // Pontuação: (acertos / totalItens) * 10, penaliza erros e não classificados
+        const totalItens = itensSim + itensNao + itensNaGrade;
         const pontosRodada = Math.max(0, Math.round(
-            ((acertos - erros * 0.5 - naoclassificados * 0.5) / totalItens) * 10
+            ((acertos - erros * 0.5 - itensNaGrade * 0.5) / totalItens) * 10
         ));
         pontos += pontosRodada;
         document.getElementById('badge-pontos').textContent = `⭐ ${pontos} pts`;
 
-        // Feedback visual
         let emoji, titulo, desc, corTitulo;
-        const taxaAcerto = acertos / (acertos + erros + naoclassificados);
-        if (taxaAcerto === 1 && naoclassificados === 0) {
+        const taxaAcerto = (acertos) / (acertos + erros + itensNaGrade);
+        if (taxaAcerto === 1 && itensNaGrade === 0) {
             emoji = '🌟'; titulo = 'Perfeito!'; desc = 'Você classificou tudo certinho!'; corTitulo = '#15803D';
         } else if (taxaAcerto >= 0.7) {
             emoji = '👏'; titulo = 'Muito bem!'; desc = 'Quase lá, continue assim!'; corTitulo = '#16a34a';
@@ -743,15 +779,14 @@
             emoji = '😅'; titulo = 'Tente mais!'; desc = 'Você vai melhorar na próxima!'; corTitulo = '#DC2626';
         }
 
-        // Grid de feedback
         let gridHtml = '';
         [...feedbackSim, ...feedbackNao].forEach(f => {
             const cls = f.ok ? 'ok' : 'err';
             const icone = f.ok ? '✅' : '❌';
             gridHtml += `<div class="feedback-card ${cls}"><span class="fmoji">${f.e}</span>${icone}</div>`;
         });
-        if (naoclassificados > 0) {
-            gridHtml += `<div class="feedback-card miss" style="grid-column:1/-1">⚠️ ${naoclassificados} veículo(s) não foram classificados!</div>`;
+        if (itensNaGrade > 0) {
+            gridHtml += `<div class="feedback-card miss" style="grid-column:1/-1">⚠️ ${itensNaGrade} veículo(s) não foram classificados!</div>`;
         }
 
         document.getElementById('m-emoji').textContent = emoji;
