@@ -22,6 +22,11 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Nunito', sans-serif;
             background: var(--bg);
@@ -29,16 +34,16 @@
                 radial-gradient(circle at 10% 20%, #d1fae5 0%, transparent 35%),
                 radial-gradient(circle at 90% 75%, #fce7f3 0%, transparent 35%),
                 radial-gradient(circle at 75% 5%,  #dbeafe 0%, transparent 30%);
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            height: 100vh;
         }
 
         header {
+            flex-shrink: 0;
             background: linear-gradient(135deg, var(--verde-dark) 0%, var(--verde-mid) 100%);
             color: white;
-            padding: 12px 24px;
+            padding: 8px 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -47,46 +52,48 @@
 
         header h1 {
             font-family: 'Fredoka One', cursive;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             letter-spacing: 0.5px;
         }
 
-        .header-badges { display: flex; gap: 10px; align-items: center; }
+        .header-badges { display: flex; gap: 8px; align-items: center; }
 
         .badge {
             background: rgba(255,255,255,0.18);
             border: 2px solid rgba(255,255,255,0.35);
             border-radius: 40px;
-            padding: 5px 16px;
+            padding: 4px 14px;
             font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
+            font-size: 0.9rem;
             white-space: nowrap;
         }
 
         main {
             flex: 1;
+            min-height: 0;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            padding: 12px 20px 8px;
-            min-height: 0;
+            gap: 8px;
+            padding: 8px 16px 4px;
+            overflow: hidden;
         }
 
         .instrucao-wrap {
+            flex-shrink: 0;
             background: white;
-            border-radius: var(--radius);
+            border-radius: 14px;
             border: 3px solid #bbf7d0;
             box-shadow: var(--shadow);
-            padding: 12px 24px;
+            padding: 8px 20px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .instrucao-label {
             font-family: 'Fredoka One', cursive;
             color: var(--verde-dark);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
@@ -95,7 +102,7 @@
 
         .instrucao-texto {
             font-family: 'Fredoka One', cursive;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #1F2937;
             flex: 1;
             text-align: center;
@@ -107,27 +114,31 @@
 
         .area-principal {
             flex: 1;
-            display: flex;
-            gap: 14px;
             min-height: 0;
+            display: flex;
+            gap: 10px;
+            overflow: hidden;
         }
 
         .grade-container {
             flex: 2;
+            min-width: 0;
             background: white;
             border-radius: var(--radius);
             border: 3px solid #bbf7d0;
             box-shadow: var(--shadow);
-            padding: 14px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
+            overflow: hidden;
         }
 
         .grade-hint {
+            flex-shrink: 0;
             font-family: 'Fredoka One', cursive;
             color: var(--verde-dark);
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             text-align: center;
             text-transform: uppercase;
             opacity: 0.8;
@@ -135,62 +146,68 @@
 
         #grade {
             flex: 1;
+            min-height: 0;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            align-content: center;
+            grid-template-rows: repeat(2, 1fr);
+            gap: 8px;
         }
 
         .item {
-            border-radius: 18px;
+            border-radius: 14px;
             border: 3px solid #E5E7EB;
             background: #FAFAFA;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3.2rem;
-            aspect-ratio: 1 / 1;
+            font-size: clamp(1.6rem, 3.5vw, 2.8rem);
             cursor: grab;
             transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
             user-select: none;
-            position: relative;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            min-height: 0;
+            min-width: 0;
         }
 
-        .item:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+        .item:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
         .item:active { cursor: grabbing; }
         .item.dragging { opacity: 0.35; transform: scale(0.92); }
 
         .zona-wrap {
             flex: 1;
+            min-width: 0;
             background: white;
             border-radius: var(--radius);
             border: 3px solid #bbf7d0;
             box-shadow: var(--shadow);
-            padding: 14px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
+            overflow: hidden;
         }
 
         .zona-titulo {
+            flex-shrink: 0;
             font-family: 'Fredoka One', cursive;
             color: var(--verde-dark);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             text-align: center;
             text-transform: uppercase;
         }
 
         .zona {
-            border-radius: 18px;
+            border-radius: 14px;
             border: 3px dashed #D1D5DB;
             background: #F9FAFB;
             flex: 1;
+            min-height: 0;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            padding: 10px;
+            gap: 6px;
+            padding: 6px;
             align-content: flex-start;
+            overflow: hidden;
             transition: background 0.2s, border-color 0.2s, transform 0.15s;
         }
 
@@ -200,11 +217,12 @@
         .zona.drag-over-nao { border-color: #EF4444; background: #FEE2E2; border-style: solid; transform: scale(1.02); }
 
         .zona-label {
+            flex-shrink: 0;
             font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
+            font-size: 0.88rem;
             text-align: center;
-            padding: 6px;
-            border-radius: 12px;
+            padding: 5px;
+            border-radius: 10px;
             text-transform: uppercase;
         }
 
@@ -212,10 +230,10 @@
         .zona-label.nao { background: #FEE2E2; color: #DC2626; }
 
         .zona .item {
-            aspect-ratio: 1/1;
-            width: calc(50% - 4px);
-            font-size: 2.4rem;
+            width: calc(50% - 3px);
+            font-size: clamp(1.2rem, 2.5vw, 2rem);
             cursor: grab;
+            aspect-ratio: 1/1;
         }
 
         .zona:empty::after {
