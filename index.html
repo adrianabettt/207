@@ -3,759 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Os Classificadores</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <title>Desafio dos Classificadores</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --verde: #22C55E;
-            --verde-dark: #15803D;
-            --verde-mid: #16a34a;
-            --amarelo: #FBBF24;
-            --laranja: #F97316;
-            --azul: #3B82F6;
-            --rosa: #EC4899;
+            --verde-escuro: #15803D;
             --bg: #F0FDF4;
-            --card: #ffffff;
-            --shadow: 0 6px 24px rgba(0,0,0,0.10);
-            --radius: 22px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html, body {
-            height: 100%;
-            overflow: hidden;
-        }
-
+        
         body {
             font-family: 'Nunito', sans-serif;
             background: var(--bg);
-            background-image:
-                radial-gradient(circle at 10% 20%, #d1fae5 0%, transparent 35%),
-                radial-gradient(circle at 90% 75%, #fce7f3 0%, transparent 35%),
-                radial-gradient(circle at 75% 5%,  #dbeafe 0%, transparent 30%);
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            overflow: hidden; /* Garante que não haja scroll */
         }
 
         header {
-            flex-shrink: 0;
-            background: linear-gradient(135deg, var(--verde-dark) 0%, var(--verde-mid) 100%);
+            background: var(--verde-escuro);
             color: white;
-            padding: 8px 20px;
+            padding: 10px 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            box-shadow: 0 4px 16px rgba(21,128,61,0.3);
+            align-items: center;
         }
 
-        header h1 {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.3rem;
-            letter-spacing: 0.5px;
-        }
+        header h1 { font-family: 'Fredoka One', cursive; font-size: 1.2rem; }
 
-        .header-badges { display: flex; gap: 8px; align-items: center; }
-
-        .badge {
-            background: rgba(255,255,255,0.18);
-            border: 2px solid rgba(255,255,255,0.35);
-            border-radius: 40px;
-            padding: 4px 14px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
+        .fase-info { font-weight: 800; background: rgba(0,0,0,0.2); padding: 4px 12px; border-radius: 20px; }
 
         main {
             flex: 1;
-            min-height: 0;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 8px 16px 4px;
-            overflow: hidden;
+            gap: 15px;
+            max-height: calc(100vh - 80px);
         }
 
-        .instrucao-wrap {
-            flex-shrink: 0;
+        .instrucao {
             background: white;
-            border-radius: 14px;
-            border: 3px solid #bbf7d0;
-            box-shadow: var(--shadow);
-            padding: 8px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .instrucao-label {
+            padding: 12px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px solid #BBF7D0;
             font-family: 'Fredoka One', cursive;
-            color: var(--verde-dark);
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            opacity: 0.7;
-        }
-
-        .instrucao-texto {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #1F2937;
-            flex: 1;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        .instrucao-texto span { color: var(--verde-dark); }
-
-        .area-principal {
+        .jogo-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 15px;
             flex: 1;
             min-height: 0;
-            display: flex;
-            gap: 10px;
-            overflow: hidden;
         }
 
-        .grade-container {
-            flex: 2;
-            min-width: 0;
+        /* Lado Esquerdo: Itens */
+        .caixa-itens {
             background: white;
-            border-radius: var(--radius);
-            border: 3px solid #bbf7d0;
-            box-shadow: var(--shadow);
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            overflow: hidden;
-        }
-
-        .grade-hint {
-            flex-shrink: 0;
-            font-family: 'Fredoka One', cursive;
-            color: var(--verde-dark);
-            font-size: 0.82rem;
-            text-align: center;
-            text-transform: uppercase;
-            opacity: 0.8;
-        }
-
-        #grade {
-            flex: 1;
-            min-height: 0;
+            border-radius: 20px;
+            padding: 15px;
+            border: 2px solid #E5E7EB;
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             grid-template-rows: repeat(2, 1fr);
-            gap: 8px;
+            gap: 10px;
         }
 
         .item {
-            border-radius: 14px;
-            border: 3px solid #E5E7EB;
-            background: #FAFAFA;
+            background: #F9FAFB;
+            border: 2px solid #D1D5DB;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+            font-size: 2.5rem;
             cursor: grab;
-            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.15s;
             user-select: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            min-height: 0;
-            min-width: 0;
+            transition: 0.2s;
         }
 
-        .item:hover { transform: scale(1.06); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
-        .item:active { cursor: grabbing; }
-        .item.dragging { opacity: 0.35; transform: scale(0.92); }
+        .item:active { cursor: grabbing; transform: scale(1.1); }
 
-        .zona-wrap {
-            flex: 1;
-            min-width: 0;
-            background: white;
-            border-radius: var(--radius);
-            border: 3px solid #bbf7d0;
-            box-shadow: var(--shadow);
-            padding: 10px;
+        /* Lado Direito: Zonas */
+        .zonas-container {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            overflow: hidden;
-        }
-
-        .zona-titulo {
-            flex-shrink: 0;
-            font-family: 'Fredoka One', cursive;
-            color: var(--verde-dark);
-            font-size: 0.85rem;
-            text-align: center;
-            text-transform: uppercase;
+            gap: 10px;
         }
 
         .zona {
-            border-radius: 14px;
-            border: 3px dashed #D1D5DB;
-            background: #F9FAFB;
             flex: 1;
-            min-height: 0;
+            border: 3px dashed #CBD5E1;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.5);
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            padding: 6px;
+            gap: 5px;
+            padding: 10px;
+            position: relative;
             align-content: flex-start;
-            overflow: hidden;
-            transition: background 0.2s, border-color 0.2s, transform 0.15s;
         }
 
-        .zona.sim { border-color: #6EE7B7; background: #ECFDF5; }
-        .zona.nao { border-color: #FCA5A5; background: #FFF1F2; }
-        .zona.drag-over-sim { border-color: var(--verde); background: #D1FAE5; border-style: solid; transform: scale(1.02); }
-        .zona.drag-over-nao { border-color: #EF4444; background: #FEE2E2; border-style: solid; transform: scale(1.02); }
-
-        .zona-label {
-            flex-shrink: 0;
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.88rem;
-            text-align: center;
-            padding: 5px;
-            border-radius: 10px;
-            text-transform: uppercase;
+        .zona::before {
+            content: attr(data-label);
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.2;
+            font-weight: 900;
+            font-size: 1.2rem;
+            pointer-events: none;
         }
 
-        .zona-label.sim { background: #D1FAE5; color: var(--verde-dark); }
-        .zona-label.nao { background: #FEE2E2; color: #DC2626; }
+        .zona.drag-over { border-color: var(--verde); background: #DCFCE7; }
 
-        .zona .item {
-            width: calc(50% - 3px);
-            font-size: clamp(1.2rem, 2.5vw, 2rem);
-            cursor: grab;
-            aspect-ratio: 1/1;
-        }
-
-        .zona:empty::after {
-            content: attr(data-placeholder);
-            color: #D1D5DB;
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.85rem;
-            width: 100%;
-            text-align: center;
-            padding-top: 20px;
-        }
+        .zona .item { width: 50px; height: 50px; font-size: 1.5rem; }
 
         .btn-conferir {
-            flex-shrink: 0;
-            background: linear-gradient(135deg, var(--verde-dark), var(--verde-mid));
+            background: var(--verde-escuro);
             color: white;
             border: none;
+            padding: 15px;
             border-radius: 12px;
-            padding: 9px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.92rem;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 0 #14532d;
-            transition: transform 0.1s, box-shadow 0.1s;
-            text-transform: uppercase;
-        }
-        .btn-conferir:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #14532d; }
-        .btn-conferir:active { transform: translateY(2px); box-shadow: 0 2px 0 #14532d; }
-        .btn-conferir:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-        /* MODAL */
-        #modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(5px);
-            display: none; justify-content: center; align-items: center; z-index: 300;
-        }
-        #modal-overlay.show { display: flex; }
-
-        .modal-content {
-            background: white;
-            border-radius: 28px;
-            padding: 28px 28px 22px;
-            width: 92%; max-width: 440px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-            animation: pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275);
-            text-align: center;
-        }
-
-        @keyframes pop {
-            from { transform: scale(0.4) rotate(-6deg); opacity: 0; }
-            to   { transform: scale(1) rotate(0); opacity: 1; }
-        }
-
-        .modal-emoji { font-size: 4rem; line-height: 1; margin-bottom: 6px; animation: bounce 0.7s ease 0.3s both; }
-        @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-
-        .modal-titulo { font-family: 'Fredoka One', cursive; font-size: 1.8rem; margin-bottom: 4px; }
-        .modal-desc { color: #6B7280; font-size: 0.9rem; font-weight: 700; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .feedback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-
-        .feedback-card { border-radius: 14px; padding: 10px 8px; font-size: 0.82rem; font-weight: 800; }
-        .feedback-card.ok   { background: #F0FDF4; color: #15803D; border: 2px solid #BBF7D0; }
-        .feedback-card.err  { background: #FEF2F2; color: #DC2626; border: 2px solid #FECACA; }
-        .feedback-card.miss { background: #FFFBEB; color: #B45309; border: 2px solid #FDE68A; }
-        .feedback-card .fmoji { font-size: 1.8rem; display: block; margin-bottom: 3px; }
-
-        .pontos-rodada {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.1rem;
-            color: var(--verde-dark);
-            background: #D1FAE5;
-            border-radius: 12px;
-            padding: 8px 14px;
-            margin-bottom: 14px;
-        }
-
-        .btn-proxima {
-            background: linear-gradient(135deg, var(--verde-dark), var(--verde-mid));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            padding: 13px;
-            width: 100%;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.05rem;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 0 #14532d;
-            transition: transform 0.1s;
-            text-transform: uppercase;
-        }
-        .btn-proxima:hover { transform: translateY(-2px); }
-        .btn-proxima:active { transform: translateY(2px); box-shadow: 0 2px 0 #14532d; }
-
-        /* TELA FINAL */
-        #tela-final {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55);
-            backdrop-filter: blur(5px);
-            justify-content: center; align-items: center; z-index: 400;
-        }
-        #tela-final.show { display: flex; }
-
-        .final-card {
-            background: white;
-            border-radius: 28px;
-            padding: 36px 32px;
-            width: 92%; max-width: 420px;
-            text-align: center;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-            animation: pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
-        }
-
-        .final-emoji { font-size: 5rem; margin-bottom: 10px; animation: bounce 0.8s ease 0.3s both; }
-        .final-titulo { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: #1F2937; margin-bottom: 6px; }
-
-        /* NOTA GRANDE */
-        .final-nota-wrap { margin: 14px 0 6px; }
-        .final-nota-label { font-family: 'Fredoka One', cursive; font-size: 0.95rem; color: #6B7280; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-        .final-nota {
-            font-family: 'Fredoka One', cursive;
-            font-size: 6rem;
-            line-height: 1;
-            margin-bottom: 2px;
-        }
-        .final-nota-sub { font-size: 0.85rem; color: #6B7280; font-weight: 800; margin-bottom: 6px; }
-
-        /* BARRA DE NOTA */
-        .barra-wrap { background: #E5E7EB; border-radius: 999px; height: 12px; margin: 10px 0 16px; overflow: hidden; }
-        .barra-fill { height: 12px; border-radius: 999px; width: 0; transition: width 1s ease; }
-
-        .final-msg { color: #6B7280; font-weight: 800; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase; }
-
-        .btn-jogar-novamente {
-            background: linear-gradient(135deg, var(--verde-dark), var(--verde-mid));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            padding: 14px;
-            width: 100%;
             font-family: 'Fredoka One', cursive;
             font-size: 1.1rem;
             cursor: pointer;
-            box-shadow: 0 4px 0 #14532d;
-            text-transform: uppercase;
+            box-shadow: 0 4px 0 #064E3B;
         }
-        .btn-jogar-novamente:hover { transform: translateY(-2px); }
+
+        .btn-conferir:active { transform: translateY(3px); box-shadow: none; }
+
+        /* Modal Simples */
+        #modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+            display: none; align-items: center; justify-content: center; z-index: 100;
+        }
+
+        .modal-box {
+            background: white; padding: 30px; border-radius: 25px; text-align: center;
+            max-width: 400px; width: 90%;
+        }
+
+        .modal-box h2 { font-family: 'Fredoka One', cursive; margin-bottom: 15px; }
 
         footer {
-            flex-shrink: 0;
-            background: #e8f5e9;
-            color: #6B7280;
+            background: #E8F5E9;
             text-align: center;
-            padding: 4px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            border-top: 2px solid #bbf7d0;
+            padding: 5px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #666;
+            border-top: 2px solid #BBF7D0;
         }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <header>
     <h1>🔍 Os Classificadores</h1>
-    <div class="header-badges">
-        <div class="badge" id="badge-fase">Desafio 1 / 5</div>
-        <div class="badge" id="badge-pontos">⭐ 0 pts</div>
-    </div>
+    <div class="fase-info" id="txt-fase">Fase 1 de 5</div>
 </header>
 
 <main>
-    <div class="instrucao-wrap">
-        <span class="instrucao-label">Classifique:</span>
-        <div class="instrucao-texto" id="criterio-txt">Carregando...</div>
-    </div>
+    <div class="instrucao" id="pergunta">Classifique os que: RODAS</div>
 
-    <div class="area-principal">
-        <div class="grade-container">
-            <p class="grade-hint">🚀 Arraste cada veículo para SIM ou NÃO</p>
-            <div id="grade"></div>
-        </div>
+    <div class="jogo-container">
+        <div class="caixa-itens" id="origem"></div>
 
-        <div class="zona-wrap">
-            <p class="zona-titulo">📦 Sua classificação</p>
-            <div class="zona-label sim">✅ Sim, pertence!</div>
-            <div class="zona sim" id="zona-sim" data-placeholder="Arraste aqui os que pertencem..."></div>
-            <div class="zona-label nao">❌ Não pertence!</div>
-            <div class="zona nao" id="zona-nao" data-placeholder="Arraste aqui os que não pertencem..."></div>
-            <button class="btn-conferir" id="btn-conferir" onclick="conferir()">✅ Conferir</button>
+        <div class="zonas-container">
+            <div class="zona" id="box-sim" data-label="PERTENCE ✅"></div>
+            <div class="zona" id="box-nao" data-label="NÃO PERTENCE ❌"></div>
+            <button class="btn-conferir" onclick="validarFase()">FINALIZAR FASE</button>
         </div>
     </div>
 </main>
 
-<!-- MODAL FEEDBACK -->
-<div id="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-emoji" id="m-emoji">🌟</div>
-        <div class="modal-titulo" id="m-titulo">Muito bem!</div>
-        <div class="modal-desc" id="m-desc">Você acertou tudo!</div>
-        <div class="feedback-grid" id="m-grid"></div>
-        <div class="pontos-rodada" id="m-pontos">+2 pontos nesta rodada!</div>
-        <button class="btn-proxima" id="btn-proxima" onclick="proxima()">Próximo desafio →</button>
+<div id="modal">
+    <div class="modal-box">
+        <h2 id="modal-titulo">Resultado</h2>
+        <p id="modal-msg" style="margin-bottom: 20px; font-weight: bold;"></p>
+        <button class="btn-conferir" id="btn-modal" onclick="proximaFase()">PRÓXIMO</button>
     </div>
 </div>
 
-<!-- TELA FINAL -->
-<div id="tela-final">
-    <div class="final-card">
-        <div class="final-emoji" id="f-emoji">🏆</div>
-        <div class="final-titulo">Jogo concluído!</div>
-        <div class="final-nota-wrap">
-            <div class="final-nota-label">Sua nota final</div>
-            <div class="final-nota" id="f-nota">0,0</div>
-            <div class="final-nota-sub" id="f-sub">de 10,0</div>
-        </div>
-        <div class="barra-wrap"><div class="barra-fill" id="f-barra"></div></div>
-        <div class="final-msg" id="f-msg"></div>
-        <button class="btn-jogar-novamente" onclick="location.reload()">🔄 Jogar de Novo</button>
-    </div>
-</div>
-
-<footer>Profª Adriana Bett Terebinto · Material Pedagógico · © 2026</footer>
+<footer>Material Pedagógico - Profª Adriana Bett Terebinto © 2026</footer>
 
 <script>
-    const TOTAL_FASES = 5;
-    const PONTOS_POR_FASE = 2; // 5 fases × 2 = 10 pontos máx
-
     const veiculos = [
-        { e: "🚗",  tags: ["RODAS","TERRA","MOTOR"] },
-        { e: "🚲",  tags: ["RODAS","TERRA"] },
-        { e: "🏍️", tags: ["RODAS","TERRA","MOTOR"] },
-        { e: "✈️",  tags: ["VOAR","MOTOR","AR","ASAS"] },
-        { e: "🚁",  tags: ["VOAR","MOTOR","AR","HÉLICE"] },
-        { e: "⛵",  tags: ["ÁGUA","VELA"] },
-        { e: "🚤",  tags: ["ÁGUA","MOTOR"] },
-        { e: "🚂",  tags: ["RODAS","TERRA","MOTOR"] },
-        { e: "🚌",  tags: ["RODAS","TERRA","MOTOR"] },
-        { e: "🚀",  tags: ["VOAR","MOTOR","AR"] },
-        { e: "🚜",  tags: ["RODAS","TERRA","MOTOR"] },
-        { e: "🚢",  tags: ["ÁGUA","MOTOR"] },
-        { e: "🛸",  tags: ["VOAR","AR"] },
-        { e: "🚠",  tags: ["MOTOR","AR"] },
-        { e: "🛶",  tags: ["ÁGUA"] },
+        { e: "🚗", tags: ["MOTOR", "RODAS"] }, { e: "🚲", tags: ["RODAS"] },
+        { e: "✈️", tags: ["VOAR", "MOTOR"] }, { e: "⛵", tags: ["AGUA"] },
+        { e: "🚤", tags: ["AGUA", "MOTOR"] }, { e: "🚁", tags: ["VOAR", "MOTOR"] },
+        { e: "🚂", tags: ["RODAS", "MOTOR"] }, { e: "🚜", tags: ["RODAS", "MOTOR"] }
     ];
 
-    const criterios = [
-        { txt: "TÊM RODAS",                    tag: "RODAS"  },
-        { txt: "VOAM",                          tag: "VOAR"   },
-        { txt: "ANDAM NA ÁGUA",                 tag: "ÁGUA"   },
-        { txt: "TÊM MOTOR",                     tag: "MOTOR"  },
-        { txt: "ANDAM NA TERRA",                tag: "TERRA"  },
-        { txt: "TÊM ASAS",                      tag: "ASAS"   },
-        { txt: "TÊM HÉLICE",                    tag: "HÉLICE" },
-        { txt: "TÊM VELA",                      tag: "VELA"   },
-        { txt: "SÃO MEIOS DE TRANSPORTE AÉREO", tag: "AR"     },
+    const desafios = [
+        { txt: "POSSUEM RODAS", tag: "RODAS" },
+        { txt: "TÊM MOTOR", tag: "MOTOR" },
+        { txt: "ANDAM NA ÁGUA", tag: "AGUA" },
+        { txt: "CONSEGUEM VOAR", tag: "VOAR" },
+        { txt: "SÃO TERRESTRES", tag: "RODAS" }
     ];
 
-    let fase = 1, pontos = 0, criterioAtual = {};
-    let criteriosUsados = [];
-    let draggingEl = null, ghostEl = null;
-    let touchOffsetX = 0, touchOffsetY = 0;
+    let faseAtual = 0;
+    let acertosTotais = 0;
+    let draggingItem = null;
 
-    function carregar() {
-        document.getElementById('badge-fase').textContent = `Desafio ${fase} / ${TOTAL_FASES}`;
-
-        let disponíveis = criterios.filter(c => !criteriosUsados.includes(c.tag));
-        if (disponíveis.length === 0) { criteriosUsados = []; disponíveis = [...criterios]; }
-        criterioAtual = disponíveis[Math.floor(Math.random() * disponíveis.length)];
-        criteriosUsados.push(criterioAtual.tag);
-
-        document.getElementById('criterio-txt').innerHTML = `<span>${criterioAtual.txt}</span>`;
-
-        document.getElementById('zona-sim').innerHTML = '';
-        document.getElementById('zona-nao').innerHTML = '';
-        document.getElementById('zona-sim').classList.remove('drag-over-sim','drag-over-nao');
-        document.getElementById('zona-nao').classList.remove('drag-over-sim','drag-over-nao');
-
-        const corretos   = veiculos.filter(v =>  v.tags.includes(criterioAtual.tag));
-        const incorretos = veiculos.filter(v => !v.tags.includes(criterioAtual.tag));
-        shuffle(corretos); shuffle(incorretos);
-
-        const nCorr = Math.min(corretos.length, 2 + Math.floor(Math.random() * 3));
-        const nErr  = Math.min(incorretos.length, 8 - nCorr);
-        const selecionados = [...corretos.slice(0, nCorr), ...incorretos.slice(0, nErr)];
-        shuffle(selecionados);
-
-        const grade = document.getElementById('grade');
-        grade.innerHTML = '';
-        selecionados.forEach(v => grade.appendChild(criarItem(v)));
-
-        configurarZonas();
-    }
-
-    function shuffle(arr) { arr.sort(() => Math.random() - 0.5); }
-
-    function criarItem(veiculo) {
-        const div = document.createElement('div');
-        div.className = 'item';
-        div.textContent = veiculo.e;
-        div.dataset.tags = veiculo.tags.join(',');
-        div.draggable = true;
-        configurarDrag(div);
-        return div;
-    }
-
-    function configurarDrag(el) {
-        el.addEventListener('dragstart', e => {
-            draggingEl = el;
-            el.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        el.addEventListener('dragend', () => {
-            el.classList.remove('dragging');
-            draggingEl = null;
-            limparDragOver();
-        });
-        el.addEventListener('touchstart', onTouchStart, { passive: false });
-    }
-
-    function configurarZonas() {
-        ['zona-sim','zona-nao','grade'].forEach(id => {
-            const el = document.getElementById(id);
-            el.addEventListener('dragover', e => {
-                e.preventDefault();
-                limparDragOver();
-                if (id === 'zona-sim') el.classList.add('drag-over-sim');
-                if (id === 'zona-nao') el.classList.add('drag-over-nao');
-            });
-            el.addEventListener('dragleave', limparDragOver);
-            el.addEventListener('drop', e => {
-                e.preventDefault();
-                limparDragOver();
-                if (!draggingEl) return;
-                el.appendChild(draggingEl);
-            });
-        });
-    }
-
-    function limparDragOver() {
-        document.getElementById('zona-sim').classList.remove('drag-over-sim','drag-over-nao');
-        document.getElementById('zona-nao').classList.remove('drag-over-sim','drag-over-nao');
-    }
-
-    function onTouchStart(e) {
-        const el = e.currentTarget;
-        draggingEl = el;
-        el.classList.add('dragging');
-        const touch = e.touches[0];
-        const rect = el.getBoundingClientRect();
-        touchOffsetX = touch.clientX - rect.left;
-        touchOffsetY = touch.clientY - rect.top;
-        ghostEl = el.cloneNode(true);
-        ghostEl.style.cssText = `position:fixed;z-index:999;pointer-events:none;
-            width:${rect.width}px;height:${rect.height}px;
-            left:${rect.left}px;top:${rect.top}px;
-            opacity:0.85;transform:scale(1.15);transition:none;`;
-        document.body.appendChild(ghostEl);
-        document.addEventListener('touchmove', onTouchMove, { passive: false });
-        document.addEventListener('touchend', onTouchEnd);
-        e.preventDefault();
-    }
-
-    function onTouchMove(e) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        if (ghostEl) {
-            ghostEl.style.left = (touch.clientX - touchOffsetX) + 'px';
-            ghostEl.style.top  = (touch.clientY - touchOffsetY) + 'px';
-        }
-        limparDragOver();
-        const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        const zona = el?.closest('#zona-sim, #zona-nao');
-        if (zona) {
-            if (zona.id === 'zona-sim') zona.classList.add('drag-over-sim');
-            if (zona.id === 'zona-nao') zona.classList.add('drag-over-nao');
-        }
-    }
-
-    function onTouchEnd(e) {
-        const touch = e.changedTouches[0];
-        document.removeEventListener('touchmove', onTouchMove);
-        document.removeEventListener('touchend', onTouchEnd);
-        if (ghostEl) { ghostEl.remove(); ghostEl = null; }
-        limparDragOver();
-        if (!draggingEl) return;
-        draggingEl.classList.remove('dragging');
-        const el = document.elementFromPoint(touch.clientX, touch.clientY);
-        const destino = el?.closest('#zona-sim, #zona-nao, #grade');
-        if (destino) destino.appendChild(draggingEl);
-        draggingEl = null;
-    }
-
-    function conferir() {
-        const zonaSim = document.getElementById('zona-sim');
-        const zonaNao = document.getElementById('zona-nao');
-        const grade   = document.getElementById('grade');
-
-        const naoclassificados = grade.querySelectorAll('.item').length;
-        if (zonaSim.querySelectorAll('.item').length === 0 && zonaNao.querySelectorAll('.item').length === 0) {
-            piscaErro(); return;
-        }
-
-        let acertos = 0, erros = 0;
-        let feedbackSim = [], feedbackNao = [];
-
-        zonaSim.querySelectorAll('.item').forEach(el => {
-            const tags = el.dataset.tags.split(',');
-            const ok = tags.includes(criterioAtual.tag);
-            if (ok) acertos++; else erros++;
-            feedbackSim.push({ e: el.textContent, ok });
-        });
-
-        zonaNao.querySelectorAll('.item').forEach(el => {
-            const tags = el.dataset.tags.split(',');
-            const ok = !tags.includes(criterioAtual.tag);
-            if (ok) acertos++; else erros++;
-            feedbackNao.push({ e: el.textContent, ok });
-        });
-
-        const totalItens = acertos + erros + naoclassificados;
-
-        // Pontuação da rodada: 0 ou 1 ou 2 pontos
-        const taxa = acertos / totalItens;
-        let pontosRodada;
-        if (taxa === 1 && naoclassificados === 0) pontosRodada = 2;
-        else if (taxa >= 0.6 && naoclassificados === 0) pontosRodada = 1;
-        else pontosRodada = 0;
-
-        pontos += pontosRodada;
-        document.getElementById('badge-pontos').textContent = `⭐ ${pontos} pts`;
-
-        let emoji, titulo, desc, corTitulo;
-        if (taxa === 1 && naoclassificados === 0) {
-            emoji = '🌟'; titulo = 'Perfeito!'; desc = 'Você classificou tudo certinho!'; corTitulo = '#15803D';
-        } else if (taxa >= 0.7) {
-            emoji = '👏'; titulo = 'Muito bem!'; desc = 'Quase lá, continue assim!'; corTitulo = '#16a34a';
-        } else if (taxa >= 0.5) {
-            emoji = '🙂'; titulo = 'Bom!'; desc = 'Você está no caminho certo!'; corTitulo = '#D97706';
-        } else {
-            emoji = '😅'; titulo = 'Tente mais!'; desc = 'Você vai melhorar na próxima!'; corTitulo = '#DC2626';
-        }
-
-        let gridHtml = '';
-        [...feedbackSim, ...feedbackNao].forEach(f => {
-            const cls = f.ok ? 'ok' : 'err';
-            const icone = f.ok ? '✅' : '❌';
-            gridHtml += `<div class="feedback-card ${cls}"><span class="fmoji">${f.e}</span>${icone}</div>`;
-        });
-        if (naoclassificados > 0) {
-            gridHtml += `<div class="feedback-card miss" style="grid-column:1/-1">⚠️ ${naoclassificados} veículo(s) não foram classificados!</div>`;
-        }
-
-        document.getElementById('m-emoji').textContent = emoji;
-        document.getElementById('m-titulo').textContent = titulo;
-        document.getElementById('m-titulo').style.color = corTitulo;
-        document.getElementById('m-desc').textContent = desc;
-        document.getElementById('m-grid').innerHTML = gridHtml;
-        document.getElementById('m-pontos').textContent =
-            pontosRodada === 2 ? '+2 pontos — nota máxima na rodada! 🎯' :
-            pontosRodada === 1 ? '+1 ponto nesta rodada!' :
-            '0 pontos nesta rodada. Continue tentando!';
-        document.getElementById('btn-proxima').textContent =
-            fase < TOTAL_FASES ? 'Próximo desafio →' : '🏆 Ver minha nota!';
-        document.getElementById('modal-overlay').classList.add('show');
-    }
-
-    function piscaErro() {
-        const btn = document.getElementById('btn-conferir');
-        btn.style.background = '#EF4444';
-        btn.textContent = '⚠️ Classifique os itens primeiro!';
-        setTimeout(() => {
-            btn.style.background = '';
-            btn.textContent = '✅ Conferir';
-        }, 1800);
-    }
-
-    function proxima() {
-        document.getElementById('modal-overlay').classList.remove('show');
-        if (fase < TOTAL_FASES) {
-            fase++;
-            carregar();
-        } else {
+    function iniciarJogo() {
+        if (faseAtual >= desafios.length) {
             mostrarFinal();
+            return;
         }
+
+        const d = desafios[faseAtual];
+        document.getElementById('txt-fase').textContent = `Fase ${faseAtual + 1} de 5`;
+        document.getElementById('pergunta').textContent = d.txt;
+        document.getElementById('box-sim').innerHTML = '';
+        document.getElementById('box-nao').innerHTML = '';
+        
+        const origem = document.getElementById('origem');
+        origem.innerHTML = '';
+
+        // Mistura e seleciona itens
+        const itensSorteados = [...veiculos].sort(() => Math.random() - 0.5);
+        itensSorteados.forEach(v => {
+            const div = document.createElement('div');
+            div.className = 'item';
+            div.textContent = v.e;
+            div.draggable = true;
+            div.dataset.tags = v.tags.join(',');
+            
+            div.addEventListener('dragstart', () => { draggingItem = div; });
+            origem.appendChild(div);
+        });
+    }
+
+    // Lógica de Drag and Drop
+    document.querySelectorAll('.zona, .caixa-itens').forEach(zona => {
+        zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('drag-over'); });
+        zona.addEventListener('dragleave', () => zona.classList.remove('drag-over'));
+        zona.addEventListener('drop', () => {
+            zona.classList.remove('drag-over');
+            zona.appendChild(draggingItem);
+        });
+    });
+
+    function validarFase() {
+        const d = desafios[faseAtual];
+        const itensSim = document.getElementById('box-sim').querySelectorAll('.item');
+        const itensNao = document.getElementById('box-nao').querySelectorAll('.item');
+        const restantes = document.getElementById('origem').querySelectorAll('.item').length;
+
+        if (restantes > 0) {
+            alert("Classifique todos os veículos antes de finalizar!");
+            return;
+        }
+
+        let erros = 0;
+        itensSim.forEach(i => { if (!i.dataset.tags.includes(d.tag)) erros++; });
+        itensNao.forEach(i => { if (i.dataset.tags.includes(d.tag)) erros++; });
+
+        if (erros === 0) {
+            acertosTotais += 2; // 2 pontos por fase perfeita
+            exibirModal("🌟 Parabéns!", "Você classificou tudo corretamente!");
+        } else {
+            exibirModal("Keep Going!", `Você cometeu ${erros} erro(s). Vamos para a próxima!`);
+        }
+    }
+
+    function exibirModal(titulo, msg) {
+        document.getElementById('modal-titulo').textContent = titulo;
+        document.getElementById('modal-msg').textContent = msg;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function proximaFase() {
+        document.getElementById('modal').style.display = 'none';
+        faseAtual++;
+        iniciarJogo();
     }
 
     function mostrarFinal() {
-        // Nota de 0 a 10 com 1 casa decimal
-        const nota = parseFloat(((pontos / (TOTAL_FASES * PONTOS_POR_FASE)) * 10).toFixed(1));
-        const notaStr = nota.toFixed(1).replace('.', ',');
-
-        let emoji, msg, corBarra;
-        if (nota >= 9)      { emoji = '🏆'; msg = 'Classificador incrível! Nota máxima!'; corBarra = '#15803D'; }
-        else if (nota >= 7) { emoji = '🌟'; msg = 'Excelente! Você arrasou!'; corBarra = '#16a34a'; }
-        else if (nota >= 5) { emoji = '👏'; msg = 'Muito bom! Continue praticando!'; corBarra = '#D97706'; }
-        else                { emoji = '💪'; msg = 'Continue tentando, você consegue!'; corBarra = '#DC2626'; }
-
-        document.getElementById('f-emoji').textContent = emoji;
-        document.getElementById('f-nota').textContent = notaStr;
-        document.getElementById('f-nota').style.color = corBarra;
-        document.getElementById('f-sub').textContent = 'de 10,0 pontos';
-        document.getElementById('f-msg').textContent = msg;
-
-        const barra = document.getElementById('f-barra');
-        barra.style.background = corBarra;
-        barra.style.width = '0%';
-
-        document.getElementById('tela-final').classList.add('show');
-        setTimeout(() => { barra.style.width = (nota * 10) + '%'; }, 100);
+        const nota = acertosTotais.toFixed(1).replace('.', ',');
+        document.body.innerHTML = `
+            <div style="height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--verde-escuro); color:white; font-family:'Fredoka One';">
+                <h1 style="font-size:3rem">🏆 FIM DE JOGO!</h1>
+                <p style="font-size:1.5rem">Sua nota final foi:</p>
+                <div style="font-size:8rem">${nota}</div>
+                <button onclick="location.reload()" style="padding:15px 30px; border-radius:15px; border:none; cursor:pointer; font-family:'Fredoka One'; font-size:1.2rem">RECOMEÇAR</button>
+                <p style="margin-top:40px; font-size:0.8rem">Material Pedagógico - Profª Adriana Bett Terebinto © 2026</p>
+            </div>
+        `;
     }
 
-    window.onload = carregar;
+    iniciarJogo();
 </script>
+
 </body>
 </html>
